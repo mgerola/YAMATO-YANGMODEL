@@ -1,0 +1,667 @@
+module yamato-opt-model {
+    namespace "urn:ietf:params:xml:ns:yang:yamato-opt-model";
+    prefix "yamato-opt-model";
+    
+    organization "CREATE-NET";
+    contact "matteo.gerola@create-net.org";
+    description "Optical network model for YAMATO control plane.";
+
+    revision 2015-12-01 {
+        description "Initial revision.";
+        reference "TBD";
+    }
+
+    typedef adm-status {
+        type enumeration {
+            enum UP {
+            	value 
+            		"1";
+            	description "Up status.";
+        	}
+			enum DOWN {
+            	value 
+            		"2";
+            	description "Up status.";
+        	}
+        }
+        description "Defines the administrative status of the element.";
+    }
+
+    typedef opr-status {
+        type enumeration {
+            enum UP {
+            	value 
+            		"1";
+            	description "Up status.";
+        	}
+			enum DOWN {
+            	value 
+            		"2";
+            	description "Up status.";
+        	}
+        }
+        description "Defines the operative status of the element.";
+    }
+    
+    typedef prv-status {
+        type enumeration {
+            enum UP {
+            	value 
+            		"1";
+            	description "Up status.";
+        	}
+			enum DOWN {
+            	value 
+            		"2";
+            	description "Up status.";
+        	}
+        }
+        description "Defines the provisioning status of the element.";
+    }
+
+    typedef dev-type {
+        type enumeration {
+            enum SWITCH {
+            	value 
+            		"1";
+            	description "Switch device.";
+        	}
+			enum TXP {
+            	value 
+            		"2";
+            	description "Transponder card.";
+        	}
+        }
+        description "Defines the type of the device.";
+    }
+
+    typedef intf-type {
+        type enumeration {
+            enum ADD {
+            	value 
+            		"1";
+            	description "Add interface.";
+        	}
+			enum DROP {
+            	value 
+            		"2";
+            	description "Drop interface.";
+        	}
+			enum LINE {
+            	value 
+            		"3";
+            	description "Line interface.";
+        	}
+			enum TRUNK {
+            	value 
+            		"4";
+            	description "Trunk interface.";
+        	}
+ 			enum VIRT {
+            	value 
+            		"5";
+            	description "Virt interface.";
+        	}
+			enum CLIENT {
+            	value 
+            		"6";
+            	description "Client interface.";
+        	}        	       	        	
+        }
+        description "Defines the type of the interface.";    
+    }
+    
+    typedef intf-direction {
+        type enumeration {
+        	enum TX {
+            	value 
+            		"1";
+            	description "Transmit interface.";
+        	}  
+        	enum RX {
+            	value 
+            		"2";
+            	description "Receive interface.";
+        	}
+        	enum BI {
+            	value 
+            		"3";
+            	description "Bidirectional interface.";
+        	}        	        	
+        }
+        description "Defines the direction of the interface.";
+    }
+    
+    typedef intf-rel-type {
+        type enumeration {
+        	enum PEER {
+            	value 
+            		"1";
+            	description "Peering relation.";
+        	}  
+        	enum SUPPORTING {
+            	value 
+            		"2";
+            	description "Supporting relation.";
+        	}
+        	enum SUPPORTED {
+            	value 
+            		"3";
+            	description "Supported relation.";
+        	}        	        	
+        }
+        description "Defines the type of relation between two ports.";
+    }
+    
+    typedef channel-grid-type {
+        type enumeration {
+        	enum SIX {
+            	value 
+            		"1";
+            	description "ITU-T G.694.1 - 6.25GHz grid.";
+        	}  
+        	enum TWELVE {
+            	value 
+            		"2";
+            	description "ITU-T G.694.1 - 12.5GHz grid.";
+        	}
+        	enum TWENTYFIVE {
+            	value 
+            		"3";
+            	description "ITU-T G.694.1 - 25GHz grid.";
+        	}   
+        	enum FIFTY {
+            	value 
+            		"4";
+            	description "ITU-T G.694.1 - 50GHz grid.";
+        	} 
+        	enum HUNDRED {
+            	value 
+            		"5";
+            	description "ITU-T G.694.1 - 100GHz grid.";
+        	}         	        	     	        	
+        }
+        description "Defines the type of grid used by the interface.";
+    }    
+    
+    typedef sw-type {
+        type enumeration {
+        	enum JOINT {
+            	value 
+            		"1";
+            	description "Joint switching.";
+        	}
+        	enum INDEPENDENT {
+            	value 
+            		"2";
+            	description "Independent switching.";
+        	}        
+        }
+        description "Defines the switching type.";
+    }
+
+    typedef opt-technology {
+        type enumeration {
+            enum DWDM {
+                value 
+                    "1";
+                description "DWDM Optical Network.";
+            }
+            enum FLEX {
+                value 
+                    "2";
+                description "Flexi-grid Optical Network.";
+            }        
+        }
+        description "Defines the switching type.";
+    }
+    
+    typedef conn-status {
+        type enumeration {
+        	enum ACTIVE {
+            	value 
+            		"1";
+            	description "Active status.";
+        	}
+        	enum PENDING {
+            	value 
+            		"2";
+            	description "Pending status.";
+        	}        
+        	enum ERROR {
+            	value 
+            		"3";
+            	description "Error status.";
+        	}
+        	enum UNKNOWN {
+            	value 
+            		"4";
+            	description "Unknown status.";
+        	}        
+        }        
+        description "Defines the status of the connection.";
+    }
+
+    typedef id {
+        type string;
+        description "Element identifier.";
+    }
+
+    grouping impairments {
+        description "Optical impairments for a switching path.";
+        leaf osnr {
+            type string;
+            description "Osnr value.";
+        }
+        leaf pmd {
+            type string;
+            description "Polarization mode dispertion value.";
+        }
+        leaf cp {
+            type string;
+            description "channel power value.";
+        }
+        leaf ssn-figure {
+            type string;
+            description "Channel ssn figure value.";
+        }
+        leaf reflectance {
+            type string;
+            description "Reflectance value.";
+        }
+        leaf extinction {
+            type string;
+            description "Extinction value.";
+        }
+        leaf nlc {
+            type string;
+            description "Non linear coefficient value.";
+        }
+        leaf cd {
+            type string;
+            description "Chromatic dispertion value.";
+        }
+        leaf pdl {
+            type string;
+            description "Polarization dependent loss value.";
+        }
+        leaf ripple {
+            type string;
+            description "Ripple value.";
+        }
+        leaf dgd {
+            type string;
+            description "Diff group delay value.";
+        }
+        leaf isolation {
+            type string;
+            description "Isolation value.";
+        }
+        leaf ac {
+            type string;
+            description "Attenuation coefficient value.";
+        }
+    }
+
+    typedef cross-impairments-type {
+        type enumeration {
+            enum COUPLING {
+                value "1";
+                description "Coupling between few-mode fibers.";
+            }
+            enum CROSS-TALK {
+                value "2";
+                description "Cross-talk between multi core fibers.";
+            }        
+        }
+        description "Type of cross-fibers impairment.";
+    }
+
+    container optical-network {
+        leaf networkId {
+            type id;
+            mandatory true;
+            description "Optical network identifier.";
+        }
+        leaf opt-technology {
+            type opt-technology;
+            mandatory true;
+            description "Optical technology supported by the network.";
+        }
+        list optical-node {
+        	description "Groups all the devices implementing a logical optical node.";
+        	leaf nodeId {
+                type id;
+                mandatory true;
+                description "Logical node identifier.";
+            }
+            leaf prv-status {
+                type prv-status;
+                mandatory true;
+                description "Provisioning status.";
+            }
+            leaf opr-status {
+                type opr-status;
+                mandatory true;
+                description "Operational status.";
+            }
+            list optical-device {
+                key "device-id";
+                description "optical device element.";
+            	leaf device-id {
+                    type id;
+                    mandatory true;
+                    description "Device identifier.";
+                }
+                leaf name {
+                    type string;
+                    mandatory true;
+                    description "Name of the optical device.";
+                }
+                leaf type {
+                   type dev-type;
+                   description "Type of the optical device.";
+                }
+    	        leaf prv-status {
+    	            type prv-status;
+    	            mandatory true;
+    	            description "Provisioning status.";
+    	        }
+    	        leaf opr-status {
+    	            type opr-status;
+    	            mandatory true;
+    	            description "Operational status.";
+    	        }
+    			container transceiver-card {
+    		    	description "Contains the transceiver card's information.";
+    		    	leaf min-freq {
+    		            type string;
+    		            mandatory true;
+    		            description "Minimum frequency supported by the card.";
+    		        }
+    		    	leaf max-freq {
+    		            type string;
+    		            mandatory true;
+    		            description "Maximum frequency supported by the card.";
+    		        }
+    		    	leaf granularity {
+    		            type string;
+    		            mandatory true;
+    		            description "Tuning granularity of the card.";
+    		        }		        
+    		    }
+                list optical-interface {
+                	key "interface-id";
+                    description "List of the devices' optical interfaces.";
+                    leaf interface-id {
+                        type id;
+                        mandatory true;
+                        description "Optical interface identifier.";
+                    }
+    		        leaf prv-status {
+    		            type prv-status;
+    		            mandatory true;
+    		            description "Provisioning status.";
+    		        }
+    		        leaf opr-status {
+    		            type opr-status;
+    		            mandatory true;
+    		            description "Operational status.";
+    		        }
+    		       	leaf adm-status {
+    		            type adm-status;
+    		            mandatory true;
+    		            description "Administrative status.";
+    		        }
+                    leaf intf-type {
+                        type intf-type;
+                        mandatory true;
+                        description "Type of the interface.";
+                    }
+                    leaf intf-direction {
+                        type intf-direction;
+                        mandatory true;
+                        description "Direction of the interface.";
+                    }
+                    leaf name {
+                        type string;
+                        description "Name of the interface.";
+                    }
+                    leaf ifIndex {
+                        type int32;
+                        mandatory true;
+                        description "Internal id of the interface.";
+                    }
+                    leaf sw-type {
+                        type sw-type;
+                        mandatory true;
+                        description "Switching type of the interface.";
+                    }
+                    leaf tx-power {
+                        type string;
+                        description "Transmission power of the interface (only if TXP).";
+                    }
+                    leaf frequency {
+                        type string;
+                        description "Current frequency of the interface (only if TXP).";
+                    }
+                    container interface-channel {
+    			    	description "Contains the switching interface channel mode configuration.";
+    			    	leaf type {
+    			            type channel-grid-type;
+    			            mandatory true;
+    			            description "Interface grid type.";
+    			        }
+    	                leaf num-slot-min {
+    	                    type int32;
+    	                    mandatory true;
+    	                    description "Min number of slots (ITU-T G.694.1 - 6.25GHz spacing).";
+    	                }
+    	                leaf num-slot-max {
+    	                    type int32;
+    	                    mandatory true;
+    	                    description "Max num of slots (ITU-T G.694.1 - 6.25GHz spacing).";
+    	                }			        
+    	                leaf first-slot {
+    	                    type int32;
+    	                    mandatory true;
+    	                    description "Initial slot (ITU-T G.694.1 - 6.25GHz spacing).";
+    	                }
+    	                leaf last-slot {
+    	                    type int32;
+    	                    mandatory true;
+    	                    description "Final slot (ITU-T G.694.1 - 6.25GHz spacing).";
+    	                }
+    	                leaf offset {
+    	                    type string;
+    	                    description "Offset between supported central frequency and standard ITU-T G.694.1 central freq.";
+    	                }	                
+    			    }
+    			    container interface-mode {
+    			    	description "Contains the transceiver interface working mode.";
+    			    	leaf fec {
+    			            type string;
+    			            mandatory true;
+    			            description "Interface's current frequency.";
+    			        }
+    			    	leaf modulation {
+    			            type string;
+    			            mandatory true;
+    			            description "Interface's current modulation.";
+    			        }
+    			    	leaf baud-rate {
+    			            type int32;
+    			            mandatory true;
+    			            description "Interface's current baud-rate.";
+    			        }		        
+    			    }
+                    list related-interface {
+    		            key "relation-id";
+    		            description "relation object";
+    		        	leaf relation-id {
+    		                type id;
+    		                mandatory true;
+    		                description "Port relation identifier.";
+    		            }
+    			        leaf other-intf-id {
+    		                type id;
+    		                mandatory true;
+    		                description "Other interface identifier.";
+    		            }
+    			        leaf relation {
+    	                    type intf-rel-type;
+    	                    mandatory true;
+    	                    description "Relation type.";
+    	                }
+    	            }
+                }
+                list optical-conn-path {
+                	key "path-id";
+                	description "List of optical cross connection paths between device's interfaces.";
+                    leaf path-id {
+                        type id;
+                        mandatory true;
+                        description "Optical connection path identifier.";
+                    }
+                    leaf src-intf-id {
+                        type id;
+                        mandatory true;
+                        description "Source interface identifier.";
+                    }
+                    leaf dst-intf-id {
+                        type id;
+                        mandatory true;
+                        description "Destination interface identifier.";
+                    }
+                    uses impairments;
+                    list cross-impairments {
+                        description "Matrix of cross-impairments between child ports (only for aggregation paths).";
+                        leaf crossImpairmentsId {
+                            type id;
+                            mandatory true;
+                            description "Cross-impairment identifier.";
+                        }
+                        leaf src-intf-id {
+                            type id;
+                            mandatory true;
+                            description "Source interface identifier.";
+                        }
+                        leaf dst-intf-id {
+                            type id;
+                            mandatory true;
+                            description "Destination interface identifier.";
+                        }
+                        leaf cross-impairments-type {
+                            type cross-impairments-type;
+                            mandatory true;
+                            description "Type of cross-impairment between child ports.";
+                        }
+                        leaf value {
+                            type string;
+                            mandatory true;
+                            description "Impairment value";
+                        }   
+                    }
+                }
+                list optical-connection {
+                	key "conn-id";
+                    description "List of configured connections insisting on the optical cross connections paths.";
+                    leaf conn-id {
+                        type id;
+                        mandatory true;
+                        description "Connection identifier.";
+                    }
+                    leaf path-id {
+                        type id;
+                        mandatory true;
+                        description "Optical connection path identifier.";
+                    }
+                    leaf status {
+                        type conn-status;
+                        mandatory true;
+                        description "Connection status.";
+                    }
+                    leaf initial-slot {
+                        type int32;
+                        mandatory true;
+                        description "Initial slot (ITU-T G.694.1 - 6.25GHz spacing).";
+                    }
+                    leaf final-slot {
+                        type int32;
+                        mandatory true;
+                        description "Final slot (ITU-T G.694.1 - 6.25GHz spacing).";
+                    }
+                }
+            }
+        }
+        list optical-link {
+            description "Optical link element.";
+            leaf linkId {
+                type id;
+                mandatory true;
+                description "Link identifier.";
+            }
+            leaf prv-status {
+                type prv-status;
+                mandatory true;
+                description "Provisioning status.";
+            }
+            leaf opr-status {
+                type opr-status;
+                mandatory true;
+                description "Operational status.";
+            }
+            leaf src-intf-id {
+                type id;
+                mandatory true;
+                description "Source interface identifier.";
+            }
+            leaf dst-intf-id {
+                type id;
+                mandatory true;
+                description "Destination interface identifier.";
+            }
+            leaf metric {
+                type int32;
+                mandatory true;
+                description "Link metric.";
+            }
+            leaf lenght {
+                type int32;
+                mandatory false;
+                description "Link lenght in meters.";
+            }
+            uses impairments;
+            list cross-impairments {
+                description "Matrix of cross-impairments between child ports (only for aggregation links).";
+                leaf crossImpairmentsId {
+                    type id;
+                    mandatory true;
+                    description "Cross-impairment identifier.";
+                }
+                leaf src-intf-id {
+                    type id;
+                    mandatory true;
+                    description "Source interface identifier.";
+                }
+                leaf dst-intf-id {
+                    type id;
+                    mandatory true;
+                    description "Destination interface identifier.";
+                }
+                leaf cross-impairments-type {
+                    type cross-impairments-type;
+                    mandatory true;
+                    description "Type of cross-impairment between child ports.";
+                }
+                leaf value {
+                    type string;
+                    mandatory true;
+                    description "Impairment value";
+                }   
+            }
+        }
+    }
+    
+}
+
